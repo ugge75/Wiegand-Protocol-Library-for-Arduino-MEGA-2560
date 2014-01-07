@@ -1,0 +1,23 @@
+#######################################
+# Syntax Coloring Map For Wiegand Library
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+WIEGAND	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+getCode	KEYWORD2
+getWiegandType	KEYWORD2
+available	KEYWORD2
+getGateActive	KEYWORD2
+
+
+#######################################
+# Constants (LITERAL1)
+#######################################
