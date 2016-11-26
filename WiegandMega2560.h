@@ -21,11 +21,13 @@ class WIEGAND {
 
 public:
 	WIEGAND();
-	void begin();
+	void begin(bool GateA, bool GateB, bool GateC);
 	bool available();
 	unsigned long getCode();
 	int getWiegandType();
 	int getGateActive();
+
+	
 	
 private:
 	static void ReadD0A();

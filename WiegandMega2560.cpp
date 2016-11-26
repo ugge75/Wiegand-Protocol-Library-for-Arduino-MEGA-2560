@@ -25,7 +25,9 @@ int			  WIEGAND::_wiegandTypeC=0;
 
 WIEGAND::WIEGAND()
 {
+
 }
+
 
 unsigned long WIEGAND::getCode()
 {
@@ -72,46 +74,60 @@ bool WIEGAND::available()
 	return DoWiegandConversion();
 }
 
-void WIEGAND::begin()
+void WIEGAND::begin(bool GateA, bool GateB, bool GateC)
 {
 	_sysTick=millis();
 	_lastWiegand = 0;
-	
-	_cardTempHighA = 0;
-	_cardTempA = 0;
-	_codeA = 0;
-	_wiegandTypeA = 0;
-	_bitCountA = 0;  
-	
-	
-	_cardTempHighB = 0;
-	_cardTempB = 0;
-	_codeB = 0;
-	_wiegandTypeB = 0;
-	_bitCountB = 0;  
 
-	
-	_cardTempHighC = 0;
-	_cardTempC = 0;
-	_codeC = 0;
-	_wiegandTypeC = 0;
-	_bitCountC = 0;  
-
-	
-	pinMode(D0PinA, INPUT);					// Set D0 pin as input
-	pinMode(D1PinA, INPUT);					// Set D1 pin as input
-	attachInterrupt(0, ReadD0A, FALLING);	// Hardware interrupt - high to low pulse
-	attachInterrupt(1, ReadD1A, FALLING);	// Hardware interrupt - high to low pulse
+	if (GateA == 1 ) 
+	{	
+		_cardTempHighA = 0;
+		_cardTempA = 0;
+		_codeA = 0;
+		_wiegandTypeA = 0;
+		_bitCountA = 0;  
 		
-	 pinMode(D0PinB, INPUT);					// Set D0 pin as input
-	 pinMode(D1PinB, INPUT);					// Set D1 pin as input
-	 attachInterrupt(2, ReadD0B, FALLING);	// Hardware interrupt - high to low pulse
-	 attachInterrupt(3, ReadD1B, FALLING);	// Hardware interrupt - high to low pulse
+		pinMode(D0PinA, INPUT);					// Set D0 pin as input
+		pinMode(D1PinA, INPUT);					// Set D1 pin as input
+		attachInterrupt(0, ReadD0A, FALLING);	// Hardware interrupt - high to low pulse
+		attachInterrupt(1, ReadD1A, FALLING);	// Hardware interrupt - high to low pulse
+	}
 	
-	// pinMode(D0PinC, INPUT);					// Set D0 pin as input
-	// pinMode(D1PinC, INPUT);					// Set D1 pin as input
-	// attachInterrupt(4, ReadD0C, FALLING);	// Hardware interrupt - high to low pulse
-	// attachInterrupt(5, ReadD1C, FALLING);	// Hardware interrupt - high to low pulse
+	if (GateB == 1 ) 
+	{		
+		_cardTempHighB = 0;
+		_cardTempB = 0;
+		_codeB = 0;
+		_wiegandTypeB = 0;
+		_bitCountB = 0;  
+	
+		pinMode(D0PinB, INPUT);					// Set D0 pin as input
+		pinMode(D1PinB, INPUT);					// Set D1 pin as input
+		attachInterrupt(2, ReadD0B, FALLING);	// Hardware interrupt - high to low pulse
+		attachInterrupt(3, ReadD1B, FALLING);	// Hardware interrupt - high to low pulse
+	}
+	
+	if (GateC == 1 ) 
+	{		
+		_cardTempHighC = 0;
+		_cardTempC = 0;
+		_codeC = 0;
+		_wiegandTypeC = 0;
+		_bitCountC = 0; 
+
+		pinMode(D0PinC, INPUT);					// Set D0 pin as input
+		pinMode(D1PinC, INPUT);					// Set D1 pin as input
+		attachInterrupt(4, ReadD0C, FALLING);	// Hardware interrupt - high to low pulse
+		attachInterrupt(5, ReadD1C, FALLING);	// Hardware interrupt - high to low pulse	
+	}
+	
+	Serial.print("GateA Enabled = ");
+	Serial.println(GateA);
+	Serial.print("GateB Enabled = ");
+	Serial.println(GateB);
+	Serial.print("GateC Enabled = ");
+	Serial.println(GateC);
+		
 }
 
 void WIEGAND::ReadD0A ()
@@ -195,7 +211,7 @@ void WIEGAND::ReadD0C ()
 	}
 	else
 	{
-		_cardTempB <<= 1;		// D0 represent binary 0, so just left shift card data
+		_cardTempC <<= 1;		// D0 represent binary 0, so just left shift card data
 	}
 	_lastWiegand = _sysTick;	// Keep track of last wiegand bit received
 }
@@ -246,7 +262,7 @@ bool WIEGAND::DoWiegandConversion ()
 	_sysTick=millis();
 	if ((_sysTick - _lastWiegand) > 25)								// if no more signal coming through after 25ms
 	{
-		if ((_bitCountA==26) || (_bitCountA==34) || (_bitCountA==8) || (_bitCountB==26) || (_bitCountB==34) || (_bitCountB==8) ) 	// bitCount for keypress=8, Wiegand 26=26, Wiegand 34=34
+		if ((_bitCountA==26) || (_bitCountA==34) || (_bitCountA==8) || (_bitCountB==26) || (_bitCountB==34) || (_bitCountB==8) || (_bitCountC==26) || (_bitCountC==34) || (_bitCountC==8) ) 	// bitCount for keypress=8, Wiegand 26=26, Wiegand 34=34
 		{
 			if ((_bitCountA==26) || (_bitCountA==34) || (_bitCountA==8)) 	// bitCount for keypress=8, Wiegand 26=26, Wiegand 34=34
 			{
@@ -367,6 +383,72 @@ bool WIEGAND::DoWiegandConversion ()
 				_cardTempHighB=0;
 				_GateActive=0;
 			}
+			
+			// fine controllo accesso B
+			
+			
+			
+			// inizio controllo accesso C 
+			if ((_bitCountC==26) || (_bitCountC==34) || (_bitCountC==8)) 	// bitCount for keypress=8, Wiegand 26=26, Wiegand 34=34
+			{
+				_cardTempC >>= 1;			// shift right 1 bit to get back the real value - interrupt done 1 left shift in advance
+				if (_bitCountC>32)			// bit count more than 32 bits, shift high bits right to make adjustment
+					_cardTempHighC >>= 1;	
+
+				if((_bitCountC==26) || (_bitCountC==34))		// wiegand 26 or wiegand 34
+				{
+					cardIDC = GetCardId (&_cardTempHighC, &_cardTempC, _bitCountC);
+					_wiegandTypeC=_bitCountC;
+					_bitCountC=0;
+					_cardTempC=0;
+					_cardTempHighC=0;
+					_GateActive=3;
+					_codeC=cardIDC;
+					return true;				
+				}
+				else if (_bitCountC==8)		// keypress wiegand
+				{
+					// 8-bit Wiegand keyboard data, high nibble is the "NOT" of low nibble
+					// eg if key 1 pressed, data=E1 in binary 11100001 , high nibble=1110 , low nibble = 0001 
+					char highNibble = (_cardTempC & 0xf0) >>4;
+					char lowNibble = (_cardTempC & 0x0f);
+					_wiegandTypeC=_bitCountC;					
+					_bitCountC=0;
+					_cardTempC=0;
+					_cardTempHighC=0;
+					_GateActive=3;
+				
+					if (lowNibble == (~highNibble & 0x0f))		// check if low nibble matches the "NOT" of high nibble.
+					{
+						if (lowNibble==0x0b)					// ENT pressed
+						{
+							_codeB=0x0d;							
+						}
+						else if (lowNibble==0x0a)				// ESC pressed
+						{
+							_codeB=0x1b;							
+						}
+						else
+						{
+							_codeB=(int)lowNibble;				// 0 - 9 keys
+						}
+						return true;
+					}
+				}
+			}
+			else
+			{
+				// well time over 25 ms and bitCount !=8 , !=26, !=34 , must be noise or nothing then.
+				_lastWiegand=_sysTick;
+				_bitCountC=0;			
+				_cardTempC=0;
+				_cardTempHighC=0;
+				_GateActive=0;
+			}
+			
+			// fine controllo accesso C			
+			
+	
 		return false;
 		}
 		else

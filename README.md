@@ -17,14 +17,27 @@ DATA0 of Wiegand connects to Arduino PIN 2
 DATA1 of Wiegand connects to Arduino PIN 3
 
 Reader 2 :
+
 DATA0 of Wiegand connects to Arduino PIN 21 
 DATA1 of Wiegand connects to Arduino PIN 20
 
 Reader 3 :
+
 DATA0 of Wiegand connects to Arduino PIN 19 
 DATA1 of Wiegand connects to Arduino PIN 18
 
 Installation Follow the instruction for library installation in Arduino.cc web site.
+
+
+
+REV 2.0 
+
+Bug fix on reader 3 
+
+Add the possibility to select which gate need to be active passing parameters to :  wg.begin(GateA, GateB , GateC);
+
+
+
 
 
 
@@ -34,9 +47,9 @@ original library can download from :
 
 https://github.com/monkeyboard/Wiegand-Protocol-Library-for-Arduino
 
+Thanks
 
-
-Modified form : Francesco Uggetti ( ugge75 )
+Francesco Uggetti
 
 *This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option) any later version.*
 
