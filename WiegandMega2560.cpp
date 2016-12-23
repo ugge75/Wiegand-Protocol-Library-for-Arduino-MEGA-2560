@@ -100,18 +100,18 @@ void WIEGAND::begin()
 	
 	pinMode(D0PinA, INPUT);					// Set D0 pin as input
 	pinMode(D1PinA, INPUT);					// Set D1 pin as input
-	attachInterrupt(0, ReadD0A, FALLING);	// Hardware interrupt - high to low pulse
-	attachInterrupt(1, ReadD1A, FALLING);	// Hardware interrupt - high to low pulse
+	attachInterrupt(D0PinA, ReadD0A, FALLING);	// Hardware interrupt - high to low pulse
+	attachInterrupt(D1PinA, ReadD1A, FALLING);	// Hardware interrupt - high to low pulse
 		
 	 pinMode(D0PinB, INPUT);					// Set D0 pin as input
 	 pinMode(D1PinB, INPUT);					// Set D1 pin as input
-	 attachInterrupt(2, ReadD0B, FALLING);	// Hardware interrupt - high to low pulse
-	 attachInterrupt(3, ReadD1B, FALLING);	// Hardware interrupt - high to low pulse
+	 attachInterrupt(D0PinB, ReadD0B, FALLING);	// Hardware interrupt - high to low pulse
+	 attachInterrupt(D1PinB, ReadD1B, FALLING);	// Hardware interrupt - high to low pulse
 	
 	pinMode(D0PinC, INPUT);					// Set D0 pin as input
 	pinMode(D1PinC, INPUT);					// Set D1 pin as input
-	attachInterrupt(4, ReadD0C, FALLING);	// Hardware interrupt - high to low pulse
-	attachInterrupt(5, ReadD1C, FALLING);	// Hardware interrupt - high to low pulse
+	attachInterrupt(D0PinC, ReadD0C, FALLING);	// Hardware interrupt - high to low pulse
+	attachInterrupt(D1PinC, ReadD1C, FALLING);	// Hardware interrupt - high to low pulse
 }
 
 void WIEGAND::ReadD0A ()
