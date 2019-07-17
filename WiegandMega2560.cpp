@@ -311,15 +311,6 @@ bool WIEGAND::DoWiegandConversion ()
 					}
 				}
 			}
-			else
-			{
-				// well time over 25 ms and bitCount !=8 , !=26, !=34 , must be noise or nothing then.
-				_lastWiegand=_sysTick;
-				_bitCountA=0;			
-				_cardTempA=0;
-				_cardTempHighA=0;
-				_GateActive=0;
-			}	
 				// fine controllo accesso A 
 				
 				
@@ -374,16 +365,6 @@ bool WIEGAND::DoWiegandConversion ()
 					}
 				}
 			}
-			else
-			{
-				// well time over 25 ms and bitCount !=8 , !=26, !=34 , must be noise or nothing then.
-				_lastWiegand=_sysTick;
-				_bitCountB=0;			
-				_cardTempB=0;
-				_cardTempHighB=0;
-				_GateActive=0;
-			}
-			
 			// fine controllo accesso B
 			
 			
@@ -436,23 +417,32 @@ bool WIEGAND::DoWiegandConversion ()
 					}
 				}
 			}
-			else
-			{
-				// well time over 25 ms and bitCount !=8 , !=26, !=34 , must be noise or nothing then.
-				_lastWiegand=_sysTick;
-				_bitCountC=0;			
-				_cardTempC=0;
-				_cardTempHighC=0;
-				_GateActive=0;
-			}
-			
-			// fine controllo accesso C			
+			// fine controllo accesso C
 			
 	
 		return false;
 		}
 		else
-		    return false;
+		{
+			// well time over 25 ms and bitCount !=8 , !=26, !=34 , must be noise or nothing then.
+			_lastWiegand=_sysTick;
+			
+			_bitCountA=0;
+			_cardTempA=0;
+			_cardTempHighA=0;
+			
+			_bitCountB=0;
+			_cardTempB=0;
+			_cardTempHighB=0;
+			
+			_bitCountC=0;
+			_cardTempC=0;
+			_cardTempHighC=0;
+			
+			_GateActive=0;
+			
+			return false;
+		}
 	}
 	else
 		return false;
